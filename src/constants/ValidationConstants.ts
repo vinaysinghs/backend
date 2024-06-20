@@ -1,0 +1,32 @@
+export const ValidationMessage = {
+    STATUS_PENDING: "Your account status is pending.",
+    STATUS_DECLINE: "Your account status is decline.",
+    SUCCESSFULLY: "successfully.",
+    ADDED_SUCCESS: "added successfully.",
+    UPDATED_SUCCESS: "updated successfully.",
+    DELETED_SUCCESS: "deleted successfully.",
+    GET_SUCCESS: "get successfully.",
+    IS_REQUIRED: "is required.",
+    IS_VALID: "Enter valid",
+    MUST_NUMBER: "field must a number",
+    MOBILE_MIN_MAX: "should contains 7 to 15 digits",
+     MUST_CHARACTERS: "contains only characters.",
+    DOES_NOT_EXIST: "does not exist.",
+    IS_NOT_CORRECT: "is not correct.",
+    IS_ALREADY_TAKEN: "is already taken.",
+    UNAUTHORIZED: "Unauthorized User.",
+    EMAIL_NOT_VERIFIED: "Your email id not verified.",
+    TOKEN_EXPIRED: "Your token has expired.",
+}
+
+export const ValidationLimit = {
+    PASSWORD_MIN: 8,
+    PASSWORD_MAX: 15,
+    MOBILE_MAX: 15,
+    MOBILE_MIN: 7,
+    CHARACTERS_MAX: 25,
+    MUST_CHARACTERS: /^[a-zA-Z ]+$/,
+    PASSWORD_MATCHES: /^(?=.[0-9])(?=.[!@#?$%^&-])(?=.[a-z])(?=.[A-Z])[a-zA-Z0-9!@#?$%^&-]{8,15}$/,
+    PASSWORD_MIN_MAX_MESSAGE: 'should be combination of one uppercase , one lower case, one special char, one digit and min 8 , max 15 char long.',
+    CHARACTERS_MAX_MESSAGE: "should contains max 25 characters.",
+}
