@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import validator from "validator";
 
+
+
 const studentschema = new mongoose.Schema({
 
     fname:{
@@ -18,10 +20,53 @@ const studentschema = new mongoose.Schema({
         Require:true,
         maxLength:50
     },
+    title:{
+        type:String,
+        maxLength:50
+    },
     phone_number:{
         type:String,
+        Require:true,
         maxLength:20
        
+    },
+    position_applied:{
+        type:String,
+        Require:true,
+        enum: ['trainee-Undergoing Masters in Counselling', 'trainee-Undergoing Masters in Clinical Psychology',
+             'intern-Completed or going through their Bachelors degree', 
+            'Clinical Psychologist','Counsellor','Other'],
+    },
+    MSCP_LKM:{
+        type:String,
+        required: function(this: any) { 
+            return !((this as any).position_applied.startsWith('trainee'));
+        }
+    },
+    languages:{
+        type:String,
+        Require:true,
+        enum:['English','Malay','Mandarin','Cantonese','Hokkien','Tamil','Other']
+    },
+    State:{
+        Require:true,
+        type:String
+    },
+    
+    Start_date:{
+        Require:true,
+        type:String
+    },
+    hear_us:{
+        Require:true,
+        type:String,
+        enum:['Friends','Instagram','Google','Facebook','Twitter','Other']
+    },
+    other_comments:{
+        type:String
+    },
+    resume: {
+        type: String
     },
     phone_country_code:{
         type:String,

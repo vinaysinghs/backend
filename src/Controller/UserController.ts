@@ -15,7 +15,8 @@ import { ErrorResponseHelper } from '../utils/ErrorHandler';
 
 export const SignUp = async (req: any, res: any) => {
     try {
-        const { name, email, password } = req?.body;
+        const { name, email, password,title,phone_number,position_applied,MSCP_LKM,languages,State,Start_date,hear_us,other_comments } = req?.body;
+        const resume= req.file?.path;
         const userExist = await UserModel.findOne({ email });
 
         if (userExist) {
@@ -24,6 +25,7 @@ export const SignUp = async (req: any, res: any) => {
                 message: `${email} ${MessageConstants.EMAIL_ALREADY_EXITS}`,
             });
         }
+        
         const fname = name?.split(' ')[0];
         const lname = name?.replace(fname, '');
         const hashPassword = await bcrypt.hash(password, 8);
@@ -31,8 +33,23 @@ export const SignUp = async (req: any, res: any) => {
             fname,
             lname,
             email,
+            title,
+            phone_number,
+            position_applied,
+            MSCP_LKM,
+            languages,
+            State,
+            Start_date,
+            hear_us,
+            other_comments,
+            resume,
             password: hashPassword,
         };
+
+        if (!position_applied.startsWith('trainee')) {
+            createData.MSCP_LKM = MSCP_LKM;
+        }
+
         await UserModel.create(createData).then(async (data) => {
 
             return res.status(StatusCode?.HTTP_OK).json({

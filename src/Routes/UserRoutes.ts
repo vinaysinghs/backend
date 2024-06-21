@@ -18,6 +18,6 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.post('/sign-up', SignUp);
+router.post('/sign-up',upload.single('resume'), SignUp);
 
 export default router; 
