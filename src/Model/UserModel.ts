@@ -7,17 +7,17 @@ const studentschema = new mongoose.Schema({
 
     fname:{
         type:String,
-        Require:true,
+       // required:true,
         maxLength:50
     },
     lname:{
         type:String,
-        Require:true,
+      //  required:true,
         maxLength:50
     },
     email:{
         type:String,
-        Require:true,
+        required:true,
         maxLength:50
     },
     title:{
@@ -26,13 +26,13 @@ const studentschema = new mongoose.Schema({
     },
     phone_number:{
         type:String,
-        Require:true,
+        required:true,
         maxLength:20
        
     },
     position_applied:{
         type:String,
-        Require:true,
+        required:true,
         enum: ['trainee-Undergoing Masters in Counselling', 'trainee-Undergoing Masters in Clinical Psychology',
              'intern-Completed or going through their Bachelors degree', 
             'Clinical Psychologist','Counsellor','Other'],
@@ -45,20 +45,20 @@ const studentschema = new mongoose.Schema({
     },
     languages:{
         type:String,
-        Require:true,
+        required:true,
         enum:['English','Malay','Mandarin','Cantonese','Hokkien','Tamil','Other']
     },
     State:{
-        Require:true,
+        required:true,
         type:String
     },
     
     Start_date:{
-        Require:true,
+        required:true,
         type:String
     },
     hear_us:{
-        Require:true,
+        required:true,
         type:String,
         enum:['Friends','Instagram','Google','Facebook','Twitter','Other']
     },
@@ -108,8 +108,15 @@ const studentschema = new mongoose.Schema({
     },
     role: { 
         type: String, 
-        enum: ['user', 'admin'], 
-        default: 'user' }
+        enum: ['user','therapist', 'admin'], 
+        required:true,
+        default: 'user' 
+    },
+        userid:{
+            type:Number,
+            unique:true,
+            required:true
+        }
 
 
 }, { timestamps: true });

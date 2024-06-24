@@ -1,4 +1,4 @@
-import { SignUp } from "../Controller/UserController";
+import { SignUp, schedule } from "../Controller/UserController";
 import express from "express";
 const path = require('path');
 const multer = require('multer');
@@ -19,5 +19,6 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.post('/sign-up',upload.single('resume'), SignUp);
+router.post('/schedule', schedule);
 
 export default router; 
