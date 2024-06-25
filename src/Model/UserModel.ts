@@ -7,12 +7,12 @@ const studentschema = new mongoose.Schema({
 
     fname:{
         type:String,
-       // required:true,
+        required:true,
         maxLength:50
     },
     lname:{
         type:String,
-      //  required:true,
+        required:true,
         maxLength:50
     },
     email:{

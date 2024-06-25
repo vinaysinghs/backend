@@ -16,7 +16,7 @@ import Create_scheduleModel from '../Model/Create_scheduleModel';
 
 export const SignUp = async (req: any, res: any) => {
     try {
-        const { name, email, password,title,phone_number,position_applied,MSCP_LKM,languages,State,Start_date,hear_us,other_comments,role,userid } = req?.body;
+        const { fname,lname, email, password,title,phone_number,position_applied,MSCP_LKM,languages,State,Start_date,hear_us,other_comments,role,userid } = req?.body;
         const resume= req.file?.path;
         const userExist = await UserModel.findOne({ email });
 
@@ -26,9 +26,6 @@ export const SignUp = async (req: any, res: any) => {
                 message: `${email} ${MessageConstants.EMAIL_ALREADY_EXITS}`,
             });
         }
-        
-        const fname = name?.split(' ')[0];
-        const lname = name?.replace(fname, '');
         const hashPassword = await bcrypt.hash(password, 8);
         const createData = {
             fname,
@@ -76,19 +73,28 @@ export const SignUp = async (req: any, res: any) => {
 
 // Create a new schedule
 export const schedule = async (req: any, res: any) => {
+    
     try {
-      const { id,role, day, startDate, startTime, endTime, recurringWeeks } = req.body;
+      const { role, day, startDate, times, recurringWeeks } = req.body;
+
+      if (!Array.isArray(times) || times.some(time => !time.startTime || !time.endTime)) {
+        return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
+          status: Status?.STATUS_FALSE,
+          status_code: StatusCode?.HTTP_BAD_REQUEST,
+          message: 'Invalid times array format',
+        });
+      }
       const newSchedule ={
-        id,
         role,
         day,
         startDate,
-        startTime,
-        endTime,
+        times,
         recurringWeeks
       };
+     
   
       await Create_scheduleModel.create(newSchedule).then(async (data) => {
+        console.log(data);
 
         return res.status(StatusCode?.HTTP_OK).json({
             status: Status?.STATUS_TRUE,
