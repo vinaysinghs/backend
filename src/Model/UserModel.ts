@@ -4,7 +4,6 @@ import validator from "validator";
 
 
 const studentschema = new mongoose.Schema({
-
     fname:{
         type:String,
         required:true,

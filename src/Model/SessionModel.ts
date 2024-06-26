@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const sessionSchema=new mongoose.Schema({
-
     userid:{
         require:true,
         type:String

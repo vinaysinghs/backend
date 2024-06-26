@@ -1,5 +1,5 @@
 import { CommonConfig} from "./config/CommonConfig"; 
-import itemroutes from "./Routes/UserRoutes";
+import Auth from "./Routes/Routes";
 const cors = require('cors');
 import express from "express";
 import mongoose from "mongoose";
@@ -13,8 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ "origin": "*" }));
 app.use(express.static('public'));
 
-
-
 mongoose.connect(CommonConfig?.MONGODB_URL).then(() => {
   app.listen(CommonConfig?.PORT, () =>
     console.log(`Database Connected and Listening at Port ${CommonConfig?.PORT}`)
@@ -23,4 +21,4 @@ mongoose.connect(CommonConfig?.MONGODB_URL).then(() => {
   console.log("Database error :", error?.message);
 })
 
-app.use('/api', itemroutes);
+app.use('/api', Auth);

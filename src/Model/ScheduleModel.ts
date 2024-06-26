@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import validator from "validator";
-
 
 const timeSchema = new mongoose.Schema({
   startTime: {
@@ -14,24 +12,23 @@ const timeSchema = new mongoose.Schema({
 });
 
 const scheduleschema = new mongoose.Schema({
+  therapist_id: {
+    require: true,
+    type: String
+  },
   day: {
     type: String,
     required: true,
     enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   },
   startDate: {
-    type: Date,
+    type: [Date],
     required: true,
   },
-  times: [timeSchema], 
+  times: [timeSchema],
   recurringWeeks: {
-    type: [Number],
+    type: Number,
     required: true,
-  },
-  role: { 
-             type: String, 
-          enum: ['therapist'], 
-           required:true ,
   }
 });
 
