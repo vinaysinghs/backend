@@ -1,5 +1,7 @@
 import { Status, StatusCode, StatusMessage } from "../constants/HttpConstants";
+import { MessageConstants } from "../constants/MessageConstants";
 import ScheduleModel from '../Model/ScheduleModel';
+import therapistDetailsModel from "../Model/TherapistDetailsModel";
 import { validateRequiredFields, validateTimes } from '../utils/ErrorHandler';
 
 export const CreateSchedule = async (req: any, res: any) => {
@@ -44,6 +46,91 @@ export const CreateSchedule = async (req: any, res: any) => {
             status: Status.STATUS_FALSE,
             message: StatusMessage.HTTP_INTERNAL_SERVER_ERROR,
             errors: error.message,
+        });
+    }
+};
+
+export const GetSchedule = async (req: any, res: any) => {
+    try {
+        const { therapist_id } = req.body;
+
+        if (!therapist_id) {
+            return res.status(StatusCode.HTTP_BAD_REQUEST).json({
+                status: Status.STATUS_FALSE,
+                status_code: StatusCode.HTTP_BAD_REQUEST,
+                message: "Therapist ID is required",
+            });
+        }
+
+        const schedules = await ScheduleModel.find({ therapist_id });
+
+        if (!schedules.length) {
+            return res.status(StatusCode.HTTP_NOT_FOUND).json({
+                status: Status.STATUS_FALSE,
+                status_code: StatusCode.HTTP_NOT_FOUND,
+                message: "No schedules found for the given therapist ID",
+            });
+        }
+
+        return res.status(StatusCode.HTTP_OK).json({
+            status: Status.STATUS_TRUE,
+            status_code: StatusCode.HTTP_OK,
+            message: 'Schedules fetched successfully',
+            data: schedules,
+        });
+    } catch (error: any) {
+        return res.status(StatusCode.HTTP_INTERNAL_SERVER_ERROR).json({
+            status: Status.STATUS_FALSE,
+            message: StatusMessage.HTTP_INTERNAL_SERVER_ERROR,
+            errors: error.message,
+        });
+    }
+};
+
+export const CreateTherapistDetails = async (req: any, res: any) => {
+    try {
+        const {
+            therapist_id,
+            appointment_type,
+            description,
+            interest_key,
+            work_with,
+            therapeutic_approach,
+            position_applied,
+        } = req.body;
+        const image = req.file?.path;
+
+        const requiredFieldsError = await validateRequiredFields({ appointment_type, description, interest_key, work_with, position_applied });
+
+        if (requiredFieldsError) {
+            return res.status(StatusCode.HTTP_BAD_REQUEST).json({
+                status: Status.STATUS_FALSE,
+                message: requiredFieldsError,
+            });
+        }
+
+        const createData = {
+            therapist_id,
+            appointment_type,
+            description,
+            interest_key,
+            therapeutic_approach,
+            image,
+        };
+
+        const therapist_details = await therapistDetailsModel.create(createData);
+        return res.status(StatusCode.HTTP_OK).json({
+            status: Status.STATUS_TRUE,
+            status_code: StatusCode.HTTP_OK,
+            message: `An 4 digit ${MessageConstants.OTP_SEND} has been sent to your email.`,
+            data: therapist_details
+        });
+
+    } catch (error: any) {
+        return res.status(StatusCode.HTTP_INTERNAL_SERVER_ERROR).json({
+            status: Status.STATUS_FALSE,
+            message: StatusMessage.HTTP_INTERNAL_SERVER_ERROR,
+            errors: error.message
         });
     }
 };

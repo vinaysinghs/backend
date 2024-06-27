@@ -5,7 +5,6 @@ import { MessageConstants } from '../constants/MessageConstants';
 import { isValidEmail, isValidPassword, validateRequiredFields } from '../utils/ErrorHandler';
 import { MessageContants } from '../constants/constants';
 
-
 export const SignUp = async (req: any, res: any) => {
     try {
         const {

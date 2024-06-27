@@ -1,4 +1,4 @@
-import { CommonConfig} from "./config/CommonConfig"; 
+import { CommonConfig } from "./config/CommonConfig";
 import Auth from "./Routes/Routes";
 const cors = require('cors');
 import express from "express";
@@ -21,4 +21,8 @@ mongoose.connect(CommonConfig?.MONGODB_URL).then(() => {
   console.log("Database error :", error?.message);
 })
 
+
 app.use('/api', Auth);
+app.use('/', (req: any, res: any) => {
+  res.json({ message: "server working" })
+});
