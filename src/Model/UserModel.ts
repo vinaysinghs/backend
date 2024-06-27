@@ -1,7 +1,4 @@
 import mongoose from "mongoose";
-import validator from "validator";
-
-
 
 const studentschema = new mongoose.Schema({
     fname: {
@@ -67,6 +64,7 @@ const studentschema = new mongoose.Schema({
     resume: {
         type: String
     },
+
     phone_country_code: {
         type: String,
         maxLength: 6
@@ -107,14 +105,9 @@ const studentschema = new mongoose.Schema({
         enum: ['user', 'therapist'],
         required: true,
     },
-    userid: {
-        type: Number,
-        unique: true,
-        required: true
-    }
 
 
 }, { timestamps: true });
 
-const UserModel = mongoose.model("User", studentschema);
+const UserModel = mongoose.model("Users", studentschema);
 export default UserModel;

@@ -1,9 +1,12 @@
 import UserModel from '../Model/UserModel';
+import SessionModel from '../Model/SessionModel';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 import { Status, StatusCode, StatusMessage } from "../constants/HttpConstants";
 import { MessageConstants } from '../constants/MessageConstants';
 import { isValidEmail, isValidPassword, validateRequiredFields } from '../utils/ErrorHandler';
 import { MessageContants } from '../constants/constants';
+import { CommonConfig } from '../config/CommonConfig';
 
 export const SignUp = async (req: any, res: any) => {
     try {
@@ -94,3 +97,58 @@ export const SignUp = async (req: any, res: any) => {
         });
     }
 };
+
+export const Login = async (req: any, res: any) => {
+    const { email, password, role } = req.body;
+    console.log(email, password, role);
+
+    try {
+        await UserModel.findOne({ email }).then(async (create_res: any) => {
+            console.log('create_res', create_res?.password);
+            if (!create_res) {
+                return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
+                    status: Status?.STATUS_FALSE,
+                    message: MessageContants?.USER_NOT_FOUND,
+                });
+            }
+            const checkPassword = await bcrypt.compare(password, create_res?.password)
+            console.log('checkPassword', checkPassword);
+
+            if (checkPassword) {
+                const response = {
+                    id: create_res?.id,
+                    email: create_res?.email,
+                }
+                const token = jwt.sign(response, CommonConfig?.JWT_KEY, {})
+                await SessionModel.create({
+                    Userid: create_res?.id,
+                    token: token
+
+                })
+                return res.status(StatusCode?.HTTP_OK).json({
+                    status: Status?.STATUS_TRUE,
+                    message: StatusMessage?.HTTP_OK,
+                    data: create_res,
+                    token: token
+                })
+            } else {
+                return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
+                    status: Status?.STATUS_FALSE,
+                    message: StatusMessage?.HTTP_VALIDATION,
+                })
+            }
+        }).catch((error: any) => {
+            return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
+                status: Status?.STATUS_FALSE,
+                message: StatusMessage?.HTTP_BAD_REQUEST,
+                errors: error.message
+            })
+        })
+    } catch (error: any) {
+        return res.status(StatusCode?.HTTP_INTERNAL_SERVER_ERROR).json({
+            status: Status?.STATUS_FALSE,
+            message: StatusMessage?.HTTP_INTERNAL_SERVER_ERROR,
+            errors: error.message
+        })
+    }
+}

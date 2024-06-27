@@ -1,5 +1,5 @@
 import Jwt from "jsonwebtoken";
-import { JWT_KEY } from "../config/CommonConfig";
+//import { JWT_KEY } from "../config/CommonConfig";
 import SessionModel from "../Model/SessionModel";
 
 export const AuthMiddleware = async (req: any, res: any, next: any) => {
