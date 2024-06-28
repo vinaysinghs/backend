@@ -25,8 +25,8 @@ const scheduleschema = new mongoose.Schema({
     type: [Date],
     required: true,
   },
-  times: [timeSchema],
-  recurringWeeks: {
+  slots: [timeSchema],
+  selectedWeek: {
     type: Number,
     required: true,
   }

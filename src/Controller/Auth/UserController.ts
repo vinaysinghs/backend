@@ -1,12 +1,12 @@
-import UserModel from '../Model/UserModel';
-import SessionModel from '../Model/SessionModel';
+import UserModel from '../../Model/UserModel';
+import SessionModel from '../../Model/SessionModel';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { Status, StatusCode, StatusMessage } from "../constants/HttpConstants";
-import { MessageConstants } from '../constants/MessageConstants';
-import { isValidEmail, isValidPassword, validateRequiredFields } from '../utils/ErrorHandler';
-import { MessageContants } from '../constants/constants';
-import { CommonConfig } from '../config/CommonConfig';
+import { Status, StatusCode, StatusMessage } from "../../constants/HttpConstants";
+import { MessageConstants } from '../../constants/MessageConstants';
+import { isValidEmail, isValidPassword, validateRequiredFields } from '../../utils/ErrorHandler';
+import { MessageContants } from '../../constants/constants';
+import { CommonConfig } from '../../config/CommonConfig';
 
 export const SignUp = async (req: any, res: any) => {
     try {
@@ -100,11 +100,8 @@ export const SignUp = async (req: any, res: any) => {
 
 export const Login = async (req: any, res: any) => {
     const { email, password, role } = req.body;
-    console.log(email, password, role);
-
     try {
         await UserModel.findOne({ email }).then(async (create_res: any) => {
-            console.log('create_res', create_res?.password);
             if (!create_res) {
                 return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
                     status: Status?.STATUS_FALSE,
@@ -112,8 +109,6 @@ export const Login = async (req: any, res: any) => {
                 });
             }
             const checkPassword = await bcrypt.compare(password, create_res?.password)
-            console.log('checkPassword', checkPassword);
-
             if (checkPassword) {
                 const response = {
                     id: create_res?.id,

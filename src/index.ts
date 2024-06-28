@@ -1,28 +1,30 @@
 import { CommonConfig } from "./config/CommonConfig";
 import Auth from "./Routes/Routes";
-const cors = require('cors');
 import express from "express";
 import mongoose from "mongoose";
-const bodyParser = require('body-parser');
+import bodyParser from "body-parser";
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ "origin": "*" }));
+app.use(cors({ origin: '*' }));
 app.use(express.static('public'));
 
-mongoose.connect(CommonConfig?.MONGODB_URL).then(() => {
-  app.listen(CommonConfig?.PORT, () =>
-    console.log(`Database Connected and Listening at Port ${CommonConfig?.PORT}`)
-  )
-}).catch((error: any) => {
-  console.log("Database error :", error?.message);
-})
-
+mongoose.connect(CommonConfig?.MONGODB_URL)
+  .then(() => {
+    app.listen(CommonConfig?.PORT, () =>
+      console.log(`Database Connected and Listening at Port ${CommonConfig?.PORT}`)
+    );
+  })
+  .catch((error) => {
+    console.log("Database error:", error?.message);
+  });
 
 app.use('/api', Auth);
-app.use('/', (req: any, res: any) => {
-  res.json({ message: "server working" })
+app.use('/', (req, res) => {
+  res.json({ message: "Server working" });
 });
+

@@ -1,8 +1,8 @@
-import { Status, StatusCode, StatusMessage } from "../constants/HttpConstants";
-import { MessageConstants } from "../constants/MessageConstants";
-import ScheduleModel from '../Model/ScheduleModel';
-import therapistDetailsModel from "../Model/TherapistDetailsModel";
-import { validateRequiredFields, validateTimes } from '../utils/ErrorHandler';
+import { Status, StatusCode, StatusMessage } from "../../constants/HttpConstants";
+import { MessageConstants } from "../../constants/MessageConstants";
+import ScheduleModel from '../../Model/ScheduleModel';
+import therapistDetailsModel from "../../Model/TherapistDetailsModel";
+import { validateRequiredFields, validateTimes } from '../../utils/ErrorHandler';
 
 export const CreateSchedule = async (req: any, res: any) => {
     try {
@@ -52,7 +52,7 @@ export const CreateSchedule = async (req: any, res: any) => {
 
 export const GetSchedule = async (req: any, res: any) => {
     try {
-        const { therapist_id } = req.body;
+        const { therapist_id, page = 1, size = 10 } = req.body;
 
         if (!therapist_id) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
@@ -62,13 +62,27 @@ export const GetSchedule = async (req: any, res: any) => {
             });
         }
 
-        const schedules = await ScheduleModel.find({ therapist_id });
+        const limit = parseInt(size as string);
+        const skip = (parseInt(page as string) - 1) * limit;
+
+        const schedules = await ScheduleModel.find({ therapist_id })
+            .limit(limit)
+            .skip(skip)
+            .exec();
+
+        const totalItems = await ScheduleModel.countDocuments({ therapist_id }).exec();
+        const totalPages = Math.ceil(totalItems / limit);
 
         if (!schedules.length) {
             return res.status(StatusCode.HTTP_NOT_FOUND).json({
                 status: Status.STATUS_FALSE,
                 status_code: StatusCode.HTTP_NOT_FOUND,
                 message: "No schedules found for the given therapist ID",
+                data: [],
+                page: parseInt(page as string),
+                size: limit,
+                totalItems,
+                totalPages
             });
         }
 
@@ -77,10 +91,17 @@ export const GetSchedule = async (req: any, res: any) => {
             status_code: StatusCode.HTTP_OK,
             message: 'Schedules fetched successfully',
             data: schedules,
+            page: parseInt(page as string),
+            size: limit,
+            totalItems,
+            totalPages
         });
     } catch (error: any) {
+        console.error("Error fetching schedules:", error);
+
         return res.status(StatusCode.HTTP_INTERNAL_SERVER_ERROR).json({
             status: Status.STATUS_FALSE,
+            status_code: StatusCode.HTTP_INTERNAL_SERVER_ERROR,
             message: StatusMessage.HTTP_INTERNAL_SERVER_ERROR,
             errors: error.message,
         });
