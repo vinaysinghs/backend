@@ -65,9 +65,6 @@ export const PayloadHelper = async (request: any) => {
 
    get_request.device_type = deviceType
 
-
-  //  console.log("<<<<<<<<<<<<<<req timezone>>>>>>>>>>>>>>" ,get_request?.timezone)
-
   return get_request;
 };
 /* ===== Payload helper end ===== */

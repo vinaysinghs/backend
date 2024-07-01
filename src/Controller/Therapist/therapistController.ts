@@ -6,8 +6,8 @@ import { validateRequiredFields, validateTimes } from '../../utils/ErrorHandler'
 
 export const CreateSchedule = async (req: any, res: any) => {
     try {
-        const { therapist_id, day, startDate, times, recurringWeeks } = req.body;
-        const requiredFieldsError = validateRequiredFields({ therapist_id, day, startDate, times, recurringWeeks });
+        const { therapist_id, day, startDate, slots, selectedWeek } = req.body;
+        const requiredFieldsError = validateRequiredFields({ therapist_id, day, startDate, slots, selectedWeek });
         if (requiredFieldsError) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
                 status: Status.STATUS_FALSE,
@@ -16,7 +16,7 @@ export const CreateSchedule = async (req: any, res: any) => {
             });
         }
 
-        const timesError = validateTimes(times);
+        const timesError = validateTimes(slots);
         if (timesError) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
                 status: Status.STATUS_FALSE,
@@ -29,12 +29,11 @@ export const CreateSchedule = async (req: any, res: any) => {
             therapist_id,
             day,
             startDate,
-            times,
-            recurringWeeks
+            slots,
+            selectedWeek
         };
 
         const data = await ScheduleModel.create(newSchedule);
-
         return res.status(StatusCode.HTTP_OK).json({
             status: Status.STATUS_TRUE,
             status_code: StatusCode.HTTP_OK,
@@ -154,4 +153,4 @@ export const CreateTherapistDetails = async (req: any, res: any) => {
             errors: error.message
         });
     }
-};
+};  

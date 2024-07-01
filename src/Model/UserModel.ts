@@ -24,51 +24,29 @@ const studentschema = new mongoose.Schema({
         type: String,
         required: true,
         maxLength: 20
-
     },
     position_applied: {
         type: String,
-        required: true,
-        enum: ['trainee-Undergoing Masters in Counselling', 'trainee-Undergoing Masters in Clinical Psychology',
-            'intern-Completed or going through their Bachelors degree',
-            'Clinical Psychologist', 'Counsellor', 'Other'],
     },
-    MSCP_LKM: {
+    licence_number: {
         type: String,
-        required: function (this: any) {
-            return !((this as any).position_applied.startsWith('trainee'));
-        }
-    },
-    languages: {
-        type: String,
-        required: true,
-        enum: ['English', 'Malay', 'Mandarin', 'Cantonese', 'Hokkien', 'Tamil', 'Other']
-    },
-    State: {
-        required: true,
-        type: String
     },
 
-    Start_date: {
-        required: true,
+    languages: {
+        type: String,
+    },
+    State: {
         type: String
     },
-    hear_us: {
-        required: true,
-        type: String,
-        enum: ['Friends', 'Instagram', 'Google', 'Facebook', 'Twitter', 'Other']
-    },
-    other_comments: {
+    Start_date: {
         type: String
     },
     resume: {
         type: String
     },
-
-    phone_country_code: {
+    country_code: {
         type: String,
         maxLength: 6
-
     },
     password: {
         type: String
@@ -76,6 +54,10 @@ const studentschema = new mongoose.Schema({
     status: {
         type: Boolean,
         default: 1
+    },
+    is_active: {
+        default: 0,
+        type: Boolean
     },
     is_notification: {
         type: Boolean,
@@ -95,17 +77,11 @@ const studentschema = new mongoose.Schema({
     is_deleted_date: {
         type: Date
     },
-    confirm_password: {
-        type: String,
-        minLength: 7,
-
-    },
     role: {
         type: String,
         enum: ['user', 'therapist'],
         required: true,
     },
-
 
 }, { timestamps: true });
 

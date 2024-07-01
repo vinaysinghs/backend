@@ -1,5 +1,6 @@
 export const MessageContants = {
     ACCOUNT_DELETED_SUCCESS: "Account Deleted Successfully.",
+    SIGN_IN_SUCCESS: "Sign In Successfully.",
     PROFILE_UPDATE: "Profile updated successfully.",
     LOGOUT_SUCCESS: "Logged Out Successfully.",
     USER_EDITED: "User has been updated successfully",

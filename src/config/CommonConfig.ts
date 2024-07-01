@@ -1,6 +1,7 @@
 export const CommonConfig = {
     PORT: 5000,
-    MONGODB_URL: "mongodb://127.0.0.1:27017/msocial",
+    // MONGODB_URL: "",
+    MONGODB_URL: "mongodb://127.0.0.1:27017/project",
     API_URL: "api/",
     API_ADMIN_URL: "api/admin/",
     BCRYPTSALT: 10,

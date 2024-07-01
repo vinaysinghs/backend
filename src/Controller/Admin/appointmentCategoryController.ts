@@ -5,10 +5,13 @@ import { validateRequiredFields } from "../../utils/ErrorHandler";
 export const CreateAppointmentCategory = async (req: any, res: any) => {
     try {
         const {
-            appointment_category_title,
+            name,
+            description,
+            price,
+            price_type
         } = req.body;
-        
-        const requiredFieldsError = await validateRequiredFields({ appointment_category_title });
+        const image = req.file?.path;
+        const requiredFieldsError = await validateRequiredFields({ name, description, price, image, price_type });
         if (requiredFieldsError) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
                 status: Status.STATUS_FALSE,
@@ -16,7 +19,11 @@ export const CreateAppointmentCategory = async (req: any, res: any) => {
             });
         }
         const user = await AppointmentCategoryModel.create({
-            appointment_category_title,
+            name,
+            description,
+            price,
+            image: image,
+            price_type
         });
         return res.status(StatusCode.HTTP_OK).json({
             status: Status.STATUS_TRUE,

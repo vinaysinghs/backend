@@ -15,21 +15,18 @@ export const SignUp = async (req: any, res: any) => {
             lname,
             email,
             password,
-            title,
             phone_number,
+            country_code,
+            title,
             position_applied,
-            MSCP_LKM,
+            licence_number,
             languages,
             State,
             Start_date,
-            hear_us,
-            other_comments,
-            role,
-            userid
+            role
         } = req.body;
         const resume = req.file?.path;
-
-        const requiredFieldsError = await validateRequiredFields({ fname, lname, email, password, phone_number, position_applied, State, Start_date, MSCP_LKM });
+        const requiredFieldsError = await validateRequiredFields({ fname, lname, email, password, phone_number, country_code });
 
         if (requiredFieldsError) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
@@ -69,16 +66,15 @@ export const SignUp = async (req: any, res: any) => {
             title,
             phone_number,
             position_applied,
-            MSCP_LKM,
+            licence_number,
             languages,
             State,
             Start_date,
-            hear_us,
-            other_comments,
+            country_code,
             resume,
             password: hashPassword,
             role,
-            userid
+            is_active: role == "user" ? 1 : 0
         };
 
         const user = await UserModel.create(createData);
@@ -98,10 +94,10 @@ export const SignUp = async (req: any, res: any) => {
     }
 };
 
-export const Login = async (req: any, res: any) => {
+export const SignIn = async (req: any, res: any) => {
     const { email, password, role } = req.body;
     try {
-        await UserModel.findOne({ email }).then(async (create_res: any) => {
+        await UserModel.findOne({ email, role }).then(async (create_res: any) => {
             if (!create_res) {
                 return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
                     status: Status?.STATUS_FALSE,
@@ -122,14 +118,14 @@ export const Login = async (req: any, res: any) => {
                 })
                 return res.status(StatusCode?.HTTP_OK).json({
                     status: Status?.STATUS_TRUE,
-                    message: StatusMessage?.HTTP_OK,
+                    message: MessageContants?.SIGN_IN_SUCCESS,
                     data: create_res,
                     token: token
                 })
             } else {
                 return res.status(StatusCode?.HTTP_BAD_REQUEST).json({
                     status: Status?.STATUS_FALSE,
-                    message: StatusMessage?.HTTP_VALIDATION,
+                    message: StatusMessage?.HTTP_VALIDATION_LOGIN_PASSWORD,
                 })
             }
         }).catch((error: any) => {
@@ -147,3 +143,52 @@ export const Login = async (req: any, res: any) => {
         })
     }
 }
+
+export const GetAllUsers = async (req: any, res: any) => {
+    try {
+        const { role, page = 1, size = 10 } = req.body;
+
+        const limit = parseInt(size as string);
+        const skip = (parseInt(page as string) - 1) * limit;
+
+        const Users = await UserModel.find({ role })
+            .limit(limit)
+            .skip(skip)
+            .exec();
+
+        const totalItems = await UserModel.countDocuments({ role }).exec();
+        const totalPages = Math.ceil(totalItems / limit);
+
+        if (!Users.length) {
+            return res.status(StatusCode.HTTP_NOT_FOUND).json({
+                status: Status.STATUS_FALSE,
+                status_code: StatusCode.HTTP_NOT_FOUND,
+                message: "No Users Found",
+                data: [],
+                page: parseInt(page as string),
+                size: limit,
+                totalItems,
+                totalPages
+            });
+        }
+
+        return res.status(StatusCode.HTTP_OK).json({
+            status: Status.STATUS_TRUE,
+            status_code: StatusCode.HTTP_OK,
+            message: 'Fetched successfully',
+            data: Users,
+            page: parseInt(page as string),
+            size: limit,
+            totalItems,
+            totalPages
+        });
+    } catch (error: any) {
+        console.error("Error fetching schedules:", error);
+        return res.status(StatusCode.HTTP_INTERNAL_SERVER_ERROR).json({
+            status: Status.STATUS_FALSE,
+            status_code: StatusCode.HTTP_INTERNAL_SERVER_ERROR,
+            message: StatusMessage.HTTP_INTERNAL_SERVER_ERROR,
+            errors: error.message,
+        });
+    }
+};
