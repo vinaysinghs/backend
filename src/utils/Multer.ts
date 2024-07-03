@@ -7,10 +7,10 @@ interface MulterOptions {
 
 const multerHelper = ({ destination }: MulterOptions) => {
     const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
+        destination: (req:any, file:any, cb:any) => {
             cb(null, destination);
         },
-        filename: (req, file, cb) => {
+        filename: (req:any, file:any, cb:any) => {
             cb(null, Date.now() + path.extname(file.originalname));
         }
     });

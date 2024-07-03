@@ -3,6 +3,7 @@ import { CreateAppointmentCategory, GetAppointmentList } from "../Controller/Adm
 import { SignIn, SignUp, GetAllUsers } from "../Controller/Auth/UserController";
 import { CreateSchedule, GetSchedule, CreateTherapistDetails } from '../Controller/Therapist/therapistController';
 import multerHelper from "../utils/Multer";
+import { CreateBooking, GetBooking } from "../Controller/Booking/BookingController";
 
 const router = express.Router();
 
@@ -22,5 +23,9 @@ router.post('/therapist-update-details', upload.single('image'), CreateTherapist
 // Admin Routes
 router.post('/create-appointment', appointmentUpload.single('image'), CreateAppointmentCategory);
 router.post('/appointment-list', GetAppointmentList);
+
+// Booking Route
+router.post('/create-booking', CreateBooking);
+router.post('/booking-list', GetBooking);
 
 export default router;

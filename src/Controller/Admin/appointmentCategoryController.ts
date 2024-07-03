@@ -8,10 +8,12 @@ export const CreateAppointmentCategory = async (req: any, res: any) => {
             name,
             description,
             price,
-            price_type
+            price_type,
+            duration,
+            message
         } = req.body;
         const image = req.file?.path;
-        const requiredFieldsError = await validateRequiredFields({ name, description, price, image, price_type });
+        const requiredFieldsError = await validateRequiredFields({ name, description, price, image, price_type, duration });
         if (requiredFieldsError) {
             return res.status(StatusCode.HTTP_BAD_REQUEST).json({
                 status: Status.STATUS_FALSE,
@@ -23,7 +25,9 @@ export const CreateAppointmentCategory = async (req: any, res: any) => {
             description,
             price,
             image: image,
-            price_type
+            price_type,
+            duration,
+            message
         });
         return res.status(StatusCode.HTTP_OK).json({
             status: Status.STATUS_TRUE,

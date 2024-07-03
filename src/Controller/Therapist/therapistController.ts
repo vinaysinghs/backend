@@ -1,5 +1,4 @@
 import { Status, StatusCode, StatusMessage } from "../../constants/HttpConstants";
-import { MessageConstants } from "../../constants/MessageConstants";
 import ScheduleModel from '../../Model/ScheduleModel';
 import therapistDetailsModel from "../../Model/TherapistDetailsModel";
 import { validateRequiredFields, validateTimes } from '../../utils/ErrorHandler';
@@ -142,7 +141,7 @@ export const CreateTherapistDetails = async (req: any, res: any) => {
         return res.status(StatusCode.HTTP_OK).json({
             status: Status.STATUS_TRUE,
             status_code: StatusCode.HTTP_OK,
-            message: `An 4 digit ${MessageConstants.OTP_SEND} has been sent to your email.`,
+            message: `Therapist details Updated successfully`,
             data: therapist_details
         });
 
@@ -153,4 +152,4 @@ export const CreateTherapistDetails = async (req: any, res: any) => {
             errors: error.message
         });
     }
-};  
+};
